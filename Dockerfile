@@ -24,8 +24,8 @@ FROM nginx:stable-alpine as server
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Custom Nginx configuration (optional)
-#COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
-EXPOSE 82
+EXPOSE 83
 
 CMD ["nginx", "-g", "daemon off;"]
