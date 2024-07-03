@@ -29,7 +29,7 @@ pipeline {
                     sh 'docker buildx build --platform linux/amd64 -t employee-retention/frontend-employee-retention:0.0.1 .'
 
                     // Run Docker container
-                    sh 'docker run --name employee-retention-frontend -d -p 82:82 employee-retention/frontend-employee-retention:0.0.1'
+                    sh 'docker run --name employee-retention-frontend -d -p 83:83 employee-retention/frontend-employee-retention:0.0.1'
             }
         }
     }
