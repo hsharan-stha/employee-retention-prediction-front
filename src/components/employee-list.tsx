@@ -19,14 +19,14 @@ const EmployeeList: React.FC = () => {
     const saveEmpApi = useMutation({
         mutationKey: ["SAVE_EMP"],
         mutationFn(data: any) {
-            return Axios.post("http://localhost:8080/employee", data)
+            return Axios.post("http://93.127.195.187:8089/employee", data)
         }
     })
 
     const getAllData = useQuery({
         queryKey: ["GET_ALL_DATA"],
         queryFn() {
-            return Axios.get("http://localhost:8080/employee")
+            return Axios.get("http://93.127.195.187:8089/employee")
         }
     })
 
@@ -50,7 +50,7 @@ const EmployeeList: React.FC = () => {
     const apiToPredict=useMutation({
         mutationKey:["PREDICT_BY_ID"],
         mutationFn(id:any){
-            return Axios.get("http://localhost:8080/employee/predict/"+id)
+            return Axios.get("http://93.127.195.187:8089/employee/predict/"+id)
         }
     })
     return (
