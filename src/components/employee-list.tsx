@@ -96,7 +96,7 @@ const EmployeeList: React.FC = () => {
                                     <PiVideoCamera/> view
                                 </button>
                                 <button onClick={() => {
-                                    toast("please wait a min for prediction result....")
+                                    toast("please wait for prediction result....")
                                     apiToPredict.mutate(r?.id, {
                                         onSuccess(res) {
                                             // toast(res?.data)
