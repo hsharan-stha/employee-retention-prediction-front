@@ -7,15 +7,17 @@ import Axios from "axios";
 import 'react-toastify/dist/ReactToastify.css';
 import {ExclamationTriangleIcon} from "@heroicons/react/16/solid";
 import {Context} from "./dashboard.tsx";
-import { PiBrain } from "react-icons/pi";
+import {PiBrain, PiVideoCamera} from "react-icons/pi";
 
 const EmployeeList: React.FC = () => {
-    const {setReload}=useContext(Context)
+    const {setReload} = useContext(Context)
     const [open, setOpen] = useState(false)
     const [pOpen, setPOpen] = useState(false)
     const [predictionText, setpredictionText] = useState("")
-    const {register, handleSubmit} = useForm();
+    const [selectedRows,setSelectedRows]=useState({});
+    const {register, handleSubmit,reset} = useForm({values:selectedRows});
 
+    const [saveBtnDisable,setSaveBtnDisable]=useState(false)
     const saveEmpApi = useMutation({
         mutationKey: ["SAVE_EMP"],
         mutationFn(data: any) {
@@ -31,13 +33,17 @@ const EmployeeList: React.FC = () => {
     })
 
 
-    const notify = () => toast("Data saved sucessfully!");
+    const notify = () => toast("Data saved successfully!");
+    const notify1 = () => toast("Please wait while data is being saved!");
 
 
     const submit = (data: any) => {
         setReload(false);
+        notify1();
         saveEmpApi.mutate(data, {
             onSuccess(res) {
+                toast.dismiss()
+
                 notify()
                 setOpen(false)
                 getAllData.refetch()
@@ -47,22 +53,22 @@ const EmployeeList: React.FC = () => {
         })
     }
 
-    const apiToPredict=useMutation({
-        mutationKey:["PREDICT_BY_ID"],
-        mutationFn(id:any){
-            return Axios.get("http://93.127.195.187:8089/employee/predict/"+id)
+    const apiToPredict = useMutation({
+        mutationKey: ["PREDICT_BY_ID"],
+        mutationFn(id: any) {
+            return Axios.get("http://93.127.195.187:8089/employee/predict/" + id)
         }
     })
     return (
-        <div>
+        <div className={"relative grow overflow-y-scroll"}>
             <div className="flex flex-row justify-between">
                 <h3 className="text-xl font-bold mb-3">Employee List</h3>
-                <button onClick={() => setOpen(true)}
+                <button onClick={() =>{ setOpen(true);setSelectedRows({});setTimeout(()=>{reset();setSaveBtnDisable(false);},100);}}
                         className="border px-4 py-1 rounded-md bg-blue-700 text-white "> Add Employee
                 </button>
             </div>
-            <div className="bg-white rounded-lg overflow-hidden border">
-                <table className="min-w-full bg-white">
+            <div className="absoulute">
+                <table className="min-w-full bg-white border border-gray-300 rounded-lg">
                     <thead>
                     <tr className={"bg-blue-100 border-b"}>
                         <th className="py-3 px-4 ">Name</th>
@@ -80,15 +86,28 @@ const EmployeeList: React.FC = () => {
                             <td className="py-3 px-4 ">{r?.department}</td>
                             <td className="py-3 px-4 ">{r?.jobTitle}</td>
                             <td className="py-3 px-4 flex justify-end">
-                                <button onClick={()=>{
-                                    apiToPredict.mutate(r?.id,{
-                                        onSuccess(res){
+                                <button
+                                    className="border flex items-center gap-2 px-4 py-1 rounded-md mr-2 " onClick={()=>{
+                                        setOpen(true);
+                                    setSelectedRows(r);
+                                    setSaveBtnDisable(false);
+
+                                }}>
+                                    <PiVideoCamera/> view
+                                </button>
+                                <button onClick={() => {
+                                    toast("please wait a min for prediction result....")
+                                    apiToPredict.mutate(r?.id, {
+                                        onSuccess(res) {
                                             // toast(res?.data)
+                                            toast.dismiss();
                                             setpredictionText(res?.data)
                                             setPOpen(true)
                                         }
                                     })
-                                }} className="border flex items-center gap-2 px-4 py-1 rounded-md bg-green-700 text-white"><PiBrain />Predict
+                                }}
+                                        className="border flex items-center gap-2 px-4 py-1 rounded-md bg-green-700 text-white">
+                                    <PiBrain/>Predict
                                 </button>
                             </td>
                         </tr>
@@ -291,11 +310,18 @@ const EmployeeList: React.FC = () => {
                                 </div>
                                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                     <button
+                                        disabled={saveBtnDisable}
                                         type="submit"
-                                        className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                                        onClick={()=>{
+                                            setTimeout(()=>{
+                                                setSaveBtnDisable(true);
+
+                                            },0)
+                                        }}
+                                        className={`inline-flex w-full justify-center rounded-md ${saveBtnDisable?`bg-gray-400`:`bg-red-600`} px-3 py-2 text-sm font-semibold text-white shadow-sm ${saveBtnDisable?`hover:bg-gray-400`:`hover:bg-red-500`} sm:ml-3 sm:w-auto`}
 
                                     >
-                                        Save
+                                        { Object.keys(selectedRows).length > 0?'Update': 'Save'} {saveBtnDisable}
                                     </button>
                                     <button
                                         type="button"
@@ -327,11 +353,13 @@ const EmployeeList: React.FC = () => {
                         >
                             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                 <div className="sm:flex sm:items-start">
-                                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                        <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
+                                    <div
+                                        className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                                        <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true"/>
                                     </div>
                                     <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                        <DialogTitle as="h3" className="text-base font-semibold leading-6 text-gray-900">
+                                        <DialogTitle as="h3"
+                                                     className="text-base font-semibold leading-6 text-gray-900">
                                             Employee Prediction Summary
                                         </DialogTitle>
                                         <div className="mt-2">

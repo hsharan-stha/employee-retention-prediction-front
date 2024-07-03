@@ -74,9 +74,10 @@ function Check() {
     })
 
     const proceedTraining = () => {
-
+toast("please wait while data is being proceed for training...")
         apiCallToProceed.mutate(holdfile, {
             onSuccess(res) {
+                toast.dismiss()
                 notify()
             }
         })
@@ -86,8 +87,8 @@ function Check() {
     return (
         <div className="flex">
             <Sidebar active={'check'}/>
-            <div className="w-3/4 p-5 h-[100vh] flex flex-col">
-                <div className={""}>
+            <div className="p-5 h-[100vh] flex flex-col flex-grow-1 w-4/5">
+
                     <div className=" mb-5">
                         <h3 className="text-xl font-bold mb-3">Train Data</h3>
 
@@ -113,7 +114,7 @@ function Check() {
                             <p className="mt-2 text-sm text-gray-500">Supported formats: .xlsx</p>
                         </div>
                     </div>
-                </div>
+
 
 
                 {data.length > 0 && (

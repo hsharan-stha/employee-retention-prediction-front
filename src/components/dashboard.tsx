@@ -25,9 +25,9 @@ const Dashboard: React.FC = () => {
         <ContextProvider>
         <div className="flex">
             <Sidebar active={'dashboard'}/>
-            <div className="w-3/4 p-5">
-                <Metrics />
-                <EmployeeList />
+            <div className="p-5 h-[100vh] flex flex-col flex-grow-1 w-4/5">
+                <Metrics/>
+                <EmployeeList/>
             </div>
         </div>
         </ContextProvider>
