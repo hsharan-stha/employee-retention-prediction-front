@@ -69,13 +69,49 @@ function Check() {
         mutationFn(file: any) {
             const formData = new FormData();
             formData.append("file", file);
-            return Axios.post("http://93.127.195.187:8089/train-by-file", formData)
+            return Axios.post("http://localhost:8089/train-by-file", formData)
+        }
+    })
+    const apiCallToProceedLR = useMutation({
+        mutationKey: ["PROCEED_TRAINING"],
+        mutationFn(file: any) {
+            const formData = new FormData();
+            formData.append("file", file);
+            return Axios.post("http://localhost:8089/train-by-file-lr", formData)
+        }
+    })
+    const apiCallToProceedSVM = useMutation({
+        mutationKey: ["PROCEED_TRAINING"],
+        mutationFn(file: any) {
+            const formData = new FormData();
+            formData.append("file", file);
+            return Axios.post("http://localhost:8089/train-by-file-svm", formData)
         }
     })
 
     const proceedTraining = () => {
 toast("please wait while data is being proceed for training...")
         apiCallToProceed.mutate(holdfile, {
+            onSuccess(res) {
+                toast.dismiss()
+                notify()
+            }
+        })
+
+    }
+    const proceedTrainingLR = () => {
+toast("please wait while data is being proceed for training...")
+        apiCallToProceedLR.mutate(holdfile, {
+            onSuccess(res) {
+                toast.dismiss()
+                notify()
+            }
+        })
+
+    }
+    const proceedTrainingSVM = () => {
+toast("please wait while data is being proceed for training...")
+        apiCallToProceedSVM.mutate(holdfile, {
             onSuccess(res) {
                 toast.dismiss()
                 notify()
@@ -120,7 +156,11 @@ toast("please wait while data is being proceed for training...")
                 {data.length > 0 && (
                     <div className={"relative grow overflow-y-scroll"}>
                         <button onClick={proceedTraining}
-                                className="border px-4 py-1 rounded-md bg-blue-700 text-white">Proceed Training
+                                className="border px-4 py-1 rounded-md bg-blue-700 text-white">Proceed Training Random Forest
+                        </button> <button onClick={proceedTrainingLR}
+                                className="border px-4 py-1 rounded-md bg-blue-700 text-white">Proceed Training LR
+                        </button> <button onClick={proceedTrainingSVM}
+                                className="border px-4 py-1 rounded-md bg-blue-700 text-white">Proceed Training SVM
                         </button>
                         <div className="absoulute">
                             <table className="min-w-full bg-white border border-gray-300 rounded-lg">

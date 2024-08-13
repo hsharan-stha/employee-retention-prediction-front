@@ -56,7 +56,13 @@ const EmployeeList: React.FC = () => {
     const apiToPredict = useMutation({
         mutationKey: ["PREDICT_BY_ID"],
         mutationFn(id: any) {
-            return Axios.get("http://93.127.195.187:8089/employee/predict/" + id)
+            return Axios.get("http://localhost:8089/employee/predict/" + id)
+        }
+    })
+    const apiToPredictSvm = useMutation({
+        mutationKey: ["PREDICT_BY_ID_SVM"],
+        mutationFn(id: any) {
+            return Axios.get("http://localhost:8089/employee/predict-svm/" + id)
         }
     })
     return (
@@ -108,6 +114,20 @@ const EmployeeList: React.FC = () => {
                                 }}
                                         className="border flex items-center gap-2 px-4 py-1 rounded-md bg-green-700 text-white">
                                     <PiBrain/>Predict
+                                </button>
+                                <button onClick={() => {
+                                    toast("please wait for prediction result....")
+                                    apiToPredictSvm.mutate(r?.id, {
+                                        onSuccess(res) {
+                                            // toast(res?.data)
+                                            toast.dismiss();
+                                            setpredictionText(res?.data)
+                                            setPOpen(true)
+                                        }
+                                    })
+                                }}
+                                        className="border flex items-center gap-2 px-4 py-1 rounded-md bg-green-700 text-white">
+                                    <PiBrain/>Predict SVM
                                 </button>
                             </td>
                         </tr>
