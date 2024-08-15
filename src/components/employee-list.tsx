@@ -21,14 +21,14 @@ const EmployeeList: React.FC = () => {
     const saveEmpApi = useMutation({
         mutationKey: ["SAVE_EMP"],
         mutationFn(data: any) {
-            return Axios.post("http://93.127.195.187:8089/employee", data)
+            return Axios.post("http://localhost:8089/employee", data)
         }
     })
 
     const getAllData = useQuery({
         queryKey: ["GET_ALL_DATA"],
         queryFn() {
-            return Axios.get("http://93.127.195.187:8089/employee")
+            return Axios.get("http://localhost:8089/employee")
         }
     })
 
@@ -63,6 +63,12 @@ const EmployeeList: React.FC = () => {
         mutationKey: ["PREDICT_BY_ID_SVM"],
         mutationFn(id: any) {
             return Axios.get("http://localhost:8089/employee/predict-svm/" + id)
+        }
+    })
+    const apiToPredictLr = useMutation({
+        mutationKey: ["PREDICT_BY_ID_LR"],
+        mutationFn(id: any) {
+            return Axios.get("http://localhost:8089/employee/predict-lr/" + id)
         }
     })
     return (
@@ -113,22 +119,35 @@ const EmployeeList: React.FC = () => {
                                     })
                                 }}
                                         className="border flex items-center gap-2 px-4 py-1 rounded-md bg-green-700 text-white">
-                                    <PiBrain/>Predict
+                                    <PiBrain/>Predict by Random Forest
                                 </button>
-                                <button onClick={() => {
-                                    toast("please wait for prediction result....")
-                                    apiToPredictSvm.mutate(r?.id, {
-                                        onSuccess(res) {
-                                            // toast(res?.data)
-                                            toast.dismiss();
-                                            setpredictionText(res?.data)
-                                            setPOpen(true)
-                                        }
-                                    })
-                                }}
-                                        className="border flex items-center gap-2 px-4 py-1 rounded-md bg-green-700 text-white">
-                                    <PiBrain/>Predict SVM
-                                </button>
+                                {/*<button onClick={() => {*/}
+                                {/*    toast("please wait for prediction result....")*/}
+                                {/*    apiToPredictSvm.mutate(r?.id, {*/}
+                                {/*        onSuccess(res) {*/}
+                                {/*            // toast(res?.data)*/}
+                                {/*            toast.dismiss();*/}
+                                {/*            setpredictionText(res?.data)*/}
+                                {/*            setPOpen(true)*/}
+                                {/*        }*/}
+                                {/*    })*/}
+                                {/*}}*/}
+                                {/*        className="border flex items-center gap-2 px-4 py-1 rounded-md bg-green-700 text-white">*/}
+                                {/*    <PiBrain/>Predict SVM*/}
+                                {/*</button><button onClick={() => {*/}
+                                {/*    toast("please wait for prediction result....")*/}
+                                {/*apiToPredictLr.mutate(r?.id, {*/}
+                                {/*        onSuccess(res) {*/}
+                                {/*            // toast(res?.data)*/}
+                                {/*            toast.dismiss();*/}
+                                {/*            setpredictionText(res?.data)*/}
+                                {/*            setPOpen(true)*/}
+                                {/*        }*/}
+                                {/*    })*/}
+                                {/*}}*/}
+                                {/*        className="border flex items-center gap-2 px-4 py-1 rounded-md bg-green-700 text-white">*/}
+                                {/*    <PiBrain/>Predict LR*/}
+                                {/*</button>*/}
                             </td>
                         </tr>
                     ))}
@@ -304,6 +323,86 @@ const EmployeeList: React.FC = () => {
                                                     <input
                                                         type="number" min={0} max={10}
                                                         {...register("personalDevelopmentOpportunities")}
+                                                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium">Motivation
+                                                         (0 - 10)</label>
+                                                    <input
+                                                        type="number" min={0} max={10}
+                                                        {...register("motivation")}
+                                                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium">Career Development
+                                                         (0 - 10)</label>
+                                                    <input
+                                                        type="number" min={0} max={10}
+                                                        {...register("careerDevelopment")}
+                                                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium">Work Life Balance
+                                                         (0 - 10)</label>
+                                                    <input
+                                                        type="number" min={0} max={10}
+                                                        {...register("workLifeBalance")}
+                                                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium">Performance Management
+                                                         (0 - 10)</label>
+                                                    <input
+                                                        type="number" min={0} max={10}
+                                                        {...register("performanceManagement")}
+                                                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium">Performance Opportunities
+                                                         (0 - 10)</label>
+                                                    <input
+                                                        type="number" min={0} max={10}
+                                                        {...register("performanceOpportunities")}
+                                                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium">Job Security
+                                                         (0 - 10)</label>
+                                                    <input
+                                                        type="number" min={0} max={10}
+                                                        {...register("jobSecurity")}
+                                                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium">Flexibility
+                                                         (0 - 10)</label>
+                                                    <input
+                                                        type="number" min={0} max={10}
+                                                        {...register("flexibility")}
+                                                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium">Stress At Work
+                                                         (0 - 10)</label>
+                                                    <input
+                                                        type="number" min={0} max={10}
+                                                        {...register("stressAtWork")}
                                                         className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                                                         required
                                                     />
