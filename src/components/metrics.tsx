@@ -9,7 +9,7 @@ const Metrics: React.FC = () => {
     const getDash=useQuery({
         queryKey:["DASH_DATA"],
         queryFn(){
-            return Axios.get("http://localhost:8089/employee/dashboard")
+            return Axios.get("http://93.127.195.187:8089/employee/dashboard")
         },enabled:reload
     })
 

@@ -69,7 +69,7 @@ function Check() {
         mutationFn(file: any) {
             const formData = new FormData();
             formData.append("file", file);
-            return Axios.post("http://localhost:8089/train-by-file", formData)
+            return Axios.post("http://93.127.195.187:8089/train-by-file", formData)
         }
     })
     const apiCallToProceedLR = useMutation({
@@ -77,7 +77,7 @@ function Check() {
         mutationFn(file: any) {
             const formData = new FormData();
             formData.append("file", file);
-            return Axios.post("http://localhost:8089/train-by-file-lr", formData)
+            return Axios.post("http://93.127.195.187:8089/train-by-file-lr", formData)
         }
     })
     const apiCallToProceedSVM = useMutation({
@@ -85,7 +85,7 @@ function Check() {
         mutationFn(file: any) {
             const formData = new FormData();
             formData.append("file", file);
-            return Axios.post("http://localhost:8089/train-by-file-svm", formData)
+            return Axios.post("http://93.127.195.187:8089/train-by-file-svm", formData)
         }
     })
 
